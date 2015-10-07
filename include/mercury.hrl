@@ -14,21 +14,4 @@
 %% limitations under the License.
 %%
 
-{application, ecall, [
-	{description, "Fast Erlang RPC server"},
-	{vsn, "0.5.0"},
-	{modules, [
-	]},
-	{registered, [ 
-	]},
-	{applications, [
-		kernel, 
-		stdlib,
-		ranch
-	]},
-	{env, [
-		{ecall_acceptors, 100},
-		{ecall_max_connections, infinity},
-		{ecall_read_timeout, infinity}
-	]}
-]}.
+-define(MERCURY_INTERNAL_SERVER_ERROR, -500).

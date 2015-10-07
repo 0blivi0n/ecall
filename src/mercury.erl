@@ -14,22 +14,22 @@
 %% limitations under the License.
 %%
 
--module(ecall).
+-module(mercury).
 
 %% ====================================================================
 %% API functions
 %% ====================================================================
 -export([start/3,
-		 stop/1]).
+	stop/1]).
 
 -spec start(Name :: atom(), Port :: non_neg_integer(), Handler :: atom()) -> {ok, pid()} | {error, badarg}.
 start(Name, Port, Handler) when is_atom(Name) andalso is_integer(Port) andalso is_atom(Handler) ->
-	Acceptors = application:get_env(ecall, ecall_acceptors, 100),
-	MaxConn = application:get_env(ecall, ecall_max_connections, infinity),
-	Timeout = application:get_env(ecall, ecall_read_timeout, 5000),
+	Acceptors = application:get_env(mercury, mercury_acceptors, 100),
+	MaxConn = application:get_env(mercury, mercury_max_connections, infinity),
+	Timeout = application:get_env(mercury, mercury_read_timeout, 5000),
 	TransOpts = [{port, Port}, {max_connections, MaxConn}],
-	ProtoOpts = [{ecall_handler, Handler}, {read_timeout, Timeout}],
-	ranch:start_listener(Name, Acceptors, ranch_tcp, TransOpts, ecall_protocol, ProtoOpts).
+	ProtoOpts = [{mercury_handler, Handler}, {read_timeout, Timeout}],
+	ranch:start_listener(Name, Acceptors, ranch_tcp, TransOpts, mercury_protocol, ProtoOpts).
 
 -spec stop(Name :: atom()) -> ok | {error, not_found}.
 stop(Name) when is_atom(Name) ->

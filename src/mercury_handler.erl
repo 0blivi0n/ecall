@@ -13,8 +13,9 @@
 %% See the License for the specific language governing permissions and
 %% limitations under the License.
 %%
--module(ecall_handler).
+-module(mercury_handler).
 
 -callback handle(Operation :: binary(), Resource :: list(), Params :: list(), Payload :: empty | any()) 
-	-> {reply, Status :: integer(), Payload :: any()} 
+	-> {reply, Status :: integer(), Params :: list(), Payload :: any()} 
+	| {reply, Status :: integer(), Params :: list()}
 	| {reply, Status :: integer()}.

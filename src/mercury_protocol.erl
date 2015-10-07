@@ -14,16 +14,17 @@
 %% limitations under the License.
 %%
 
--module(ecall_protocol).
+-module(mercury_protocol).
 
--include("ecall.hrl").
+-include("mercury.hrl").
 
 -behaviour(ranch_protocol).
 
 -define(REQUEST(Operation, Resource, Params, Payload), {request, Operation, Resource, Params, Payload}).
--define(RESPONSE(Status, Payload), {response, Status, Payload}).
--define(SIMPLE_RESPONSE(Status), ?RESPONSE(Status, empty)).
--define(SERVER_ERROR, ?SIMPLE_RESPONSE(?ECALL_INTERNAL_SERVER_ERROR)).
+-define(RESPONSE(Status, Params, Payload), {response, Status, Params, Payload}).
+-define(BASIC_RESPONSE(Status, Params), ?RESPONSE(Status, Params, empty)).
+-define(SIMPLE_RESPONSE(Status), ?BASIC_RESPONSE(Status, [])).
+-define(SERVER_ERROR, ?SIMPLE_RESPONSE(?MERCURY_INTERNAL_SERVER_ERROR)).
 
 %% ====================================================================
 %% API functions
@@ -38,7 +39,7 @@ start_link(Ref, Socket, Transport, Opts) ->
 
 init(Ref, Socket, Transport, Opts) ->
 	ok = ranch:accept_ack(Ref),
-	{_, Handler} = lists:keyfind(ecall_handler, 1, Opts), 
+	{_, Handler} = lists:keyfind(mercury_handler, 1, Opts), 
 	{_, Timeout} = lists:keyfind(read_timeout, 1, Opts), 
 	loop(Socket, Transport, Handler, Timeout).
 
@@ -68,8 +69,10 @@ response(Handler, ?REQUEST(Operation, Resource, Params, Payload))
 	try Handler:handle(Operation, Resource, Params, Payload) of
 		{reply, Status} when is_integer(Status) ->
 			?SIMPLE_RESPONSE(Status);
-		{reply, Status, Reply} when is_integer(Status) ->
-			?RESPONSE(Status, Reply);
+		{reply, Status, Props} when is_integer(Status) andalso is_list(Props) ->
+			?BASIC_RESPONSE(Status, Props);
+		{reply, Status, Props, Reply} when is_integer(Status) andalso is_list(Props) ->
+			?RESPONSE(Status, Props, Reply);		
 		Msg ->
 			error_logger:error_report("~p: Invalid reply from module ~p: ~p\n", [?MODULE, Handler, Msg]),
 			?SERVER_ERROR

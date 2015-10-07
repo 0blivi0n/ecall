@@ -1,2 +1,2 @@
-# ecall
-Fast erlang rpc server
+# Mercury
+Fast Erlang RPC Server

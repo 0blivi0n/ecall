@@ -29,6 +29,6 @@
 	{env, [
 		{ecall_acceptors, 100},
 		{ecall_max_connections, infinity},
-		{ecall_read_timeout, 5000}
+		{ecall_read_timeout, infinity}
 	]}
 ]}.

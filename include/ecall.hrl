@@ -14,4 +14,4 @@
 %% limitations under the License.
 %%
 
--define(ECALL_INTERNAL_SERVER_ERROR, 500).
+-define(ECALL_INTERNAL_SERVER_ERROR, -500).

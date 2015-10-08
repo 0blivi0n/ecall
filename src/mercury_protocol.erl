@@ -58,8 +58,13 @@ loop(Socket, Transport, Handler, Timeout) ->
 	end.
 
 process(Handler, Data) ->
-	Request = erlang:binary_to_term(Data, [safe]),
-	Response = response(Handler, Request),
+	Response = try erlang:binary_to_term(Data, [safe]) of
+		Request -> response(Handler, Request)
+	catch Error:Reason -> 
+			LogArgs = [?MODULE, Data, Error, Reason],
+			error_logger:error_report("~p: Error while executing erlang:binary_to_term(~p, [safe]) -> ~p:~p\n", LogArgs),
+			?SERVER_ERROR
+	end,
 	erlang:term_to_binary(Response).
 
 response(Handler, ?REQUEST(Operation, Resource, Params, Payload)) 

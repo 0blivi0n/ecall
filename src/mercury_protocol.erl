@@ -62,7 +62,7 @@ process(Handler, Data) ->
 		Request -> response(Handler, Request)
 	catch Error:Reason -> 
 			LogArgs = [?MODULE, Data, Error, Reason],
-			error_logger:error_report("~p: Error while executing erlang:binary_to_term(~p, [safe]) -> ~p:~p\n", LogArgs),
+			error_logger:error_msg("~p: Error while executing erlang:binary_to_term(~p, [safe]) -> ~p:~p\n", LogArgs),
 			?SERVER_ERROR
 	end,
 	erlang:term_to_binary(Response).
@@ -79,13 +79,13 @@ response(Handler, ?REQUEST(Operation, Resource, Params, Payload))
 		{reply, Status, Props, Reply} when is_integer(Status) andalso is_list(Props) ->
 			?RESPONSE(Status, Props, Reply);		
 		Msg ->
-			error_logger:error_report("~p: Invalid reply from module ~p: ~p\n", [?MODULE, Handler, Msg]),
+			error_logger:error_msg("~p: Invalid reply from module ~p: ~p\n", [?MODULE, Handler, Msg]),
 			?SERVER_ERROR
 	catch Error:Reason -> 
 			LogArgs = [?MODULE, Handler, Operation, Resource, Params, Payload, Error, Reason],
-			error_logger:error_report("~p: Error while executing ~p:handle(~p, ~p, ~p, ~p) -> ~p:~p\n", LogArgs),
+			error_logger:error_msg("~p: Error while executing ~p:handle(~p, ~p, ~p, ~p) -> ~p:~p\n", LogArgs),
 			?SERVER_ERROR
 	end;
 response(_Handler, Request) -> 
-	error_logger:error_report("~p: Not a valid request: ~p\n", [?MODULE, Request]),
+	error_logger:error_msg("~p: Not a valid request: ~p\n", [?MODULE, Request]),
 	?SERVER_ERROR.

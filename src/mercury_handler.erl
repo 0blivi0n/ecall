@@ -1,5 +1,5 @@
 %%
-%% Copyright 2015 Joaquim Rocha <jrocha@gmailbox.org>
+%% Copyright 2015-16 Joaquim Rocha <jrocha@gmailbox.org>
 %% 
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -15,7 +15,5 @@
 %%
 -module(mercury_handler).
 
--callback handle(Operation :: binary(), Resource :: list(), Params :: list(), Payload :: empty | any()) 
-	-> {reply, Status :: integer(), Params :: list(), Payload :: any()} 
-	| {reply, Status :: integer(), Params :: list()}
-	| {reply, Status :: integer()}.
+-callback handle(Operation :: binary(), Resource :: list(), Params :: map(), Payload :: empty | any())
+								-> {reply, Status :: integer(), Params :: map(), Payload :: any()|empty}.

@@ -1,5 +1,5 @@
 %%
-%% Copyright 2015 Joaquim Rocha <jrocha@gmailbox.org>
+%% Copyright 2015-16 Joaquim Rocha <jrocha@gmailbox.org>
 %% 
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@
 %% API functions
 %% ====================================================================
 -export([start/3,
-	stop/1]).
+				 stop/1]).
 
 -spec start(Name :: atom(), Port :: non_neg_integer(), Handler :: atom()) -> {ok, pid()} | {error, badarg}.
-start(Name, Port, Handler) when is_atom(Name) andalso is_integer(Port) andalso is_atom(Handler) ->
-	Acceptors = application:get_env(mercury, mercury_acceptors, 100),
-	MaxConn = application:get_env(mercury, mercury_max_connections, infinity),
-	Timeout = application:get_env(mercury, mercury_read_timeout, 5000),
+start(Name, Port, Handler) when is_atom(Name), is_integer(Port), is_atom(Handler) ->
+	Acceptors = application:get_env(mercury, mercury_acceptors),
+	MaxConn = application:get_env(mercury, mercury_max_connections),
+	Timeout = application:get_env(mercury, mercury_read_timeout),
 	TransOpts = [{port, Port}, {max_connections, MaxConn}],
 	ProtoOpts = [{mercury_handler, Handler}, {read_timeout, Timeout}],
 	ranch:start_listener(Name, Acceptors, ranch_tcp, TransOpts, mercury_protocol, ProtoOpts).

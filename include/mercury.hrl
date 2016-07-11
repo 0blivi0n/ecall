@@ -1,5 +1,5 @@
 %%
-%% Copyright 2015 Joaquim Rocha <jrocha@gmailbox.org>
+%% Copyright 2015-16 Joaquim Rocha <jrocha@gmailbox.org>
 %% 
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -15,3 +15,9 @@
 %%
 
 -define(MERCURY_INTERNAL_SERVER_ERROR, -500).
+
+-define(MERCURY_REQUEST(Operation, Resource, Params, Payload), {request, Operation, Resource, Params, Payload}).
+-define(MERCURY_REPLY(Status, Params, Payload), {reply, Status, Params, Payload}).
+
+-define(MERCURY_NO_PAYLOAD, empty).
+-define(MERCURY_NO_PARAMS, #{}).

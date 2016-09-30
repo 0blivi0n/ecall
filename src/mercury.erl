@@ -20,13 +20,13 @@
 %% API functions
 %% ====================================================================
 -export([start/3,
-				 stop/1]).
+	stop/1]).
 
 -spec start(Name :: atom(), Port :: non_neg_integer(), Handler :: atom()) -> {ok, pid()} | {error, badarg}.
 start(Name, Port, Handler) when is_atom(Name), is_integer(Port), is_atom(Handler) ->
-	Acceptors = application:get_env(mercury, mercury_acceptors),
-	MaxConn = application:get_env(mercury, mercury_max_connections),
-	Timeout = application:get_env(mercury, mercury_read_timeout),
+	{ok, Acceptors} = application:get_env(mercury, mercury_acceptors),
+	{ok, MaxConn} = application:get_env(mercury, mercury_max_connections),
+	{ok, Timeout} = application:get_env(mercury, mercury_read_timeout),
 	TransOpts = [{port, Port}, {max_connections, MaxConn}],
 	ProtoOpts = [{mercury_handler, Handler}, {read_timeout, Timeout}],
 	ranch:start_listener(Name, Acceptors, ranch_tcp, TransOpts, mercury_protocol, ProtoOpts).
@@ -38,5 +38,3 @@ stop(Name) when is_atom(Name) ->
 %% ====================================================================
 %% Internal functions
 %% ====================================================================
-
-

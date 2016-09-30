@@ -16,4 +16,4 @@
 -module(mercury_handler).
 
 -callback handle(Operation :: binary(), Resource :: list(), Params :: map(), Payload :: empty | any())
-								-> {reply, Status :: integer(), Params :: map(), Payload :: any()|empty}.
+	-> {reply, Status :: integer(), Params :: map(), Payload :: any()|empty}.

@@ -76,17 +76,17 @@ process(_Handler, Request) ->
 invoke(Handler, Operation, Resource, Params, Payload) ->
 	try Handler:handle(Operation, Resource, Params, Payload)
 	catch Error:Reason ->
-		LogArgs = [?MODULE, Handler, Operation, Resource, Params, Payload, Error, Reason],
-		error_logger:error_msg("~p: Error while executing ~p:handle(~p, ~p, ~p, ~p) -> ~p:~p\n", LogArgs),
-		?FAILED
+			LogArgs = [?MODULE, Handler, Operation, Resource, Params, Payload, Error, Reason],
+			error_logger:error_msg("~p: Error while executing ~p:handle(~p, ~p, ~p, ~p) -> ~p:~p\n", LogArgs),
+			?FAILED
 	end.
 
 decode(Input) ->
 	try erlang:binary_to_term(Input, [safe])
 	catch Error:Reason ->
-		LogArgs = [?MODULE, Input, Error, Reason],
-		error_logger:error_msg("~p: Error while executing erlang:binary_to_term(~p, [safe]) -> ~p:~p\n", LogArgs),
-		?FAILED
+			LogArgs = [?MODULE, Input, Error, Reason],
+			error_logger:error_msg("~p: Error while executing erlang:binary_to_term(~p, [safe]) -> ~p:~p\n", LogArgs),
+			?FAILED
 	end.
 
 encode(Reply) -> erlang:term_to_binary(Reply).
